@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Borea.App/Borea.App.csproj" />
+    <Project Path="src/Borea.Core/Borea.Core.csproj" />
+    <Project Path="src/Borea.Network/Borea.Network.csproj" />
+  </Folder>
+</Solution>
