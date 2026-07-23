@@ -1,10 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 
-namespace Borea.Core.Mods
+namespace Borea.Core.Mods;
+
+/// <summary>
+/// A snapshot of a mod's descriptive and release information, as of a
+/// specific version. Immutable once constructed — typically captured at
+/// install time and stored on the owning <see cref="InstalledMod"/>, so it
+/// remains valid even if the source mod is later removed or altered upstream.
+/// </summary>
+public sealed class ModMetadata
 {
-    internal class ModMetadata
+    public string ModId { get; }
+    public string Name { get; }
+    public string Author { get; }
+    public string Description { get; }
+    public string? HomepageUrl { get; }
+    public string? ChangeLog { get; }
+    public DateTimeOffset ReleasedAt { get; }
+    public long FileSizeBytes { get; }
+    public IReadOnlyList<ModDependency> Dependencies { get; }
+    public IReadOnlyList<string> Tags { get; }
+
+    public ModMetadata(
+        string modId,
+        string name,
+        string author,
+        string description,
+        DateTimeOffset releasedAt,
+        long fileSizeBytes,
+        IReadOnlyList<ModDependency>? dependencies = null,
+        IReadOnlyList<string>? tags = null,
+        string? homepageUrl = null,
+        string? changeLog = null)
     {
+        if (string.IsNullOrWhiteSpace(modId))
+            throw new ArgumentException("Mod ID cannot be null or whitespace.", nameof(modId));
+
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Name cannot be null or whitespace.", nameof(name));
+
+        if (string.IsNullOrWhiteSpace(author))
+            throw new ArgumentException("Author cannot be null or whitespace.", nameof(author));
+
+        if (description is null)
+            throw new ArgumentNullException(nameof(description));
+
+        if (fileSizeBytes < 0)
+            throw new ArgumentOutOfRangeException(nameof(fileSizeBytes), "File size cannot be negative.");
+
+        ModId = modId;
+        Name = name;
+        Author = author;
+        Description = description;
+        ReleasedAt = releasedAt;
+        FileSizeBytes = fileSizeBytes;
+        Dependencies = dependencies is null ? Array.Empty<ModDependency>() : new ReadOnlyCollection<ModDependency>(dependencies.ToArray());
+        Tags = tags is null ? Array.Empty<string>() : new ReadOnlyCollection<string>(tags.ToArray());
+        HomepageUrl = homepageUrl;
+        ChangeLog = changeLog;
     }
 }

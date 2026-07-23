@@ -115,7 +115,6 @@
         public static bool operator <=(ModVersion left, ModVersion right) => left.CompareTo(right) <= 0;
         public static bool operator >=(ModVersion left, ModVersion right) => left.CompareTo(right) >= 0;
 
-        public override string ToString() =>
-            PreRelease is null ? $"{Major}.{Minor}.{Patch}" : $"{Major}.{Minor}.{Patch}-{PreRelease}";
+        public override string ToString() => PreRelease is null ? $"{Major}.{Minor}.{Patch}" : $"{Major}.{Minor}.{Patch}-{PreRelease}";
     }
 }
